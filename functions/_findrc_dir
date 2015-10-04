@@ -1,0 +1,37 @@
+#compdef findrc_dir
+#
+
+local -a dotfileskip
+dotfileskip+=".config"
+
+_findrc_dir() {
+    local -a args
+
+    # _arguments -C '1: :->args'
+
+    for dotfile in $(find $HOME -maxdepth 1 -type l -name '.*');do
+        skip=false
+        for skip in ${dotfileskip[@]};do
+            if [[ "$(basename $dotfile)" == "$skip" ]];then
+                skip=true
+            fi
+            if [[ -L "$dotfile" && ! -d $(readlink "$dotfile") ]];then
+                skip=true
+            fi
+            if [[ ! -d "$dotfile" ]];then
+                skip=true
+            fi
+        done
+        if [[ $skip != true ]];then 
+            args+=$(basename $dotfile|sed 's/^\.//')
+        fi
+    done
+    for configfile in $(find $HOME/.config -maxdepth 1);do
+        # arg+="$(basename $dotfile|sed 's/^\.//'):$dotfile"
+        [[ -d $configfile ]] && args+=$(basename $configfile)
+    done
+    compadd -a args
+}
+
+# run the main dispatcher
+_findrc_dir "$@"

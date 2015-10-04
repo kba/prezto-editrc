@@ -1,10 +1,10 @@
-#compdef editrc
+#compdef findrc
 #
 
 local -a dotfileskip
 dotfileskip+=".config"
 
-_editrc() {
+_findrc() {
     local -a args
 
     # _arguments -C '1: :->args'
@@ -28,4 +28,4 @@ _editrc() {
 }
 
 # run the main dispatcher
-_editrc "$@"
+_findrc "$@"
